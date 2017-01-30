@@ -29,11 +29,8 @@ def generate_password():
 
 
 @respond_to('password')
-def pass_request(message):
-    message.reply(generate_password())
-
 @respond_to('password (\d*)')
-def pass_multi_request(message, num_words):
+def pass_multi_request(message, num_words=1):
     tries = int(num_words)
     if (tries > 10):
         message.reply("I can't generate that many passwords at one time.")
