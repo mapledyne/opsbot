@@ -20,20 +20,7 @@ def generate_password():
     return newpass
 
 
-@respond_to('password')
-def pass_request(message):
-    message.reply(generate_password())
-
-@respond_to('admins')
-def pass_request(message):
-    message.reply('My admins are: {}'.format(", ".join(people['admins'])))
-
-
 def main():
-    bot = Bot()
-    bot.run()
-
-if __name__ == "__main__":
     with open(wordpath) as w:
         wordlist = w.readlines()
 
@@ -41,4 +28,9 @@ if __name__ == "__main__":
         maybe.append(word.strip())
 
     people = load_people()
+
+    bot = Bot()
+    bot.run()
+
+if __name__ == "__main__":
     main()
