@@ -36,3 +36,14 @@ def pass_request(message):
 @respond_to('admins')
 def pass_request(message):
     message.reply('My admins are: {}'.format(", ".join(people['admins'])))
+
+
+@respond_to('status')
+def status(message):
+    message.reply('User_id: ' + str(message._client.users[message._get_user_id()]))
+    print(message._body)
+
+@respond_to('users')
+def users(message):
+    message.reply('Users: {}'.format(", ".join(message._client.users)))
+
