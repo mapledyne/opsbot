@@ -12,7 +12,7 @@ maybe = []
 def load_people():
     with open(people_path) as data_file:
         people = json.load(data_file)
-
+    return people
 
 def generate_password():
     random.shuffle(maybe)
@@ -26,7 +26,7 @@ def pass_request(message):
 
 @respond_to('admins')
 def pass_request(message):
-    message.reply('My admins are: {}'.format(", ".join(people[admins])))
+    message.reply('My admins are: {}'.format(", ".join(people['admins'])))
 
 
 def main():
@@ -40,5 +40,5 @@ if __name__ == "__main__":
     for word in wordlist:
         maybe.append(word.strip())
 
-    load_people()
+    people = load_people()
     main()
