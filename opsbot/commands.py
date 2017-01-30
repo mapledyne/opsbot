@@ -32,6 +32,18 @@ def generate_password():
 def pass_request(message):
     message.reply(generate_password())
 
+@respond_to('password (\d*)')
+def pass_multi_request(message, num_words):
+    tries = int(num_words)
+    if (tries > 10):
+        message.reply("I can't generate that many passwords at one time.")
+        return
+    if (tries < 1):
+        message.reply("That doesn't make any sense.")
+        return
+    for x in range(tries):
+        message.reply(generate_password())
+
 
 @respond_to('admins')
 def pass_request(message):
@@ -43,7 +55,16 @@ def status(message):
     message.reply('User_id: ' + str(message._client.users[message._get_user_id()]))
     print(message._body)
 
+
 @respond_to('users')
 def users(message):
     message.reply('Users: {}'.format(", ".join(message._client.users)))
 
+
+@respond_to('find user (.*)')
+def find_user_by_name(message, username):
+    for userid, user in iteritems(self.users):
+        if user['name'] == username:
+            message.reply(message._client.users[message._get_user_id()])
+            return
+    message.reply('No user found by that name: {}.'.format(username))
