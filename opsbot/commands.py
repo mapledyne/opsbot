@@ -1,5 +1,6 @@
 import json
 import random
+from six import iteritems
 from slackbot.bot import respond_to
 
 wordpath = '/opt/words/wordlist.txt'
@@ -28,7 +29,7 @@ def generate_password():
     return newpass
 
 
-@respond_to('password')
+@respond_to('password$')
 @respond_to('password (\d*)')
 def pass_multi_request(message, num_words=1):
     tries = int(num_words)
