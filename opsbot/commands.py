@@ -48,21 +48,44 @@ def pass_request(message):
     message.reply('My admins are: {}'.format(", ".join(people['admins'])))
 
 
-@respond_to('status')
+@respond_to('me')
 def status(message):
-    message.reply('User_id: ' + str(message._client.users[message._get_user_id()]))
-    print(message._body)
+    message.reply('User_id: ' +
+                  str(message._client.users[message._get_user_id()]))
+
+
+@respond_to('body')
+def body(message):
+    message.reply(str(message._body))
 
 
 @respond_to('users')
 def users(message):
-    message.reply('Users: {}'.format(", ".join(message._client.users)))
+    user_list = []
+    for userid, user in iteritems(message._client.users):
+        user_list.append(user["name"])
+    user_list.sort()
+    message.reply('Users: {}'.format(", ".join(user_list)))
 
 
-@respond_to('find user (.*)')
+@respond_to('search (.*)')
+def search_user(message, search):
+    found = []
+    search = search.lower()
+    for userid, user in iteritems(message._client.users):
+        if search in user['name'].lower:
+            found.append('{} ({})'.format(user['name'], userid))
+            return
+    if len(found) == 0:
+        message.reply('No user found by that key: {}.'.format(search))
+        return
+    message.reply('Users found: {}'.format(', '.join(found)))
+
+
+@respond_to('details (.*)')
 def find_user_by_name(message, username):
-    for userid, user in iteritems(self.users):
+    for userid, user in iteritems(message._client.users):
         if user['name'] == username:
-            message.reply(message._client.users[message._get_user_id()])
+            message.reply(str(user))
             return
     message.reply('No user found by that name: {}.'.format(username))
