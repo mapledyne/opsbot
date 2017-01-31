@@ -64,8 +64,7 @@ def users(message):
     user_list = []
     for userid, user in iteritems(message._client.users):
         user_list.append(user["name"])
-    user_list.sort()
-    message.reply('Users: {}'.format(", ".join(user_list)))
+    message.reply("{} users found. Try 'search <name>' to find someone.".format(len(user_list)))
 
 
 @respond_to('search (.*)')
@@ -73,9 +72,8 @@ def search_user(message, search):
     found = []
     search = search.lower()
     for userid, user in iteritems(message._client.users):
-        if search in user['name'].lower:
+        if search in user['name'].lower():
             found.append('{} ({})'.format(user['name'], userid))
-            return
     if len(found) == 0:
         message.reply('No user found by that key: {}.'.format(search))
         return
