@@ -21,11 +21,17 @@ def load_people():
         people = json.load(data_file)
     return people
 
+
 people = load_people()
+
 
 def generate_password():
     random.shuffle(maybe)
-    newpass = maybe[0] + str(random.randint(0, 99)) + maybe[1] + str(random.randint(0, 99)) + maybe[2]
+    newpass = (maybe[0] +
+               str(random.randint(0, 99)) +
+               maybe[1] +
+               str(random.randint(0, 99)) +
+               maybe[2])
     return newpass
 
 
@@ -41,6 +47,13 @@ def pass_multi_request(message, num_words=1):
         return
     for x in range(tries):
         message.reply(generate_password())
+
+
+@respond_to('help')
+def help(message):
+    url = ('https://mcgops.atlassian.net'
+           '/wiki/display/HO/McgAuthBot+commands+and+help')
+    message.reply('Help document for me lives at: {}'.format(url))
 
 
 @respond_to('admins')
