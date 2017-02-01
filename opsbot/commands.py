@@ -39,7 +39,7 @@ def list_to_names(names):
     names_list = []
     for n in names:
         names_list.append(names[n].details['name'])
-
+    return names_list
 
 @respond_to('password$')
 @respond_to('password (\d*)')
