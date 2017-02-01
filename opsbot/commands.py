@@ -31,7 +31,7 @@ def generate_password():
 
 def load_users(everyone):
     for user in iteritems(everyone):
-        if user not in user_list.keys:
+        if user not in user_list.keys():
             print('Missing user found: {}'.format(user))
             continue
         user_list.load(everyone[user])
