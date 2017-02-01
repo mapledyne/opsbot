@@ -2,6 +2,7 @@ import json
 import random
 from six import iteritems
 from slackbot.bot import respond_to
+from datetime import datetime, timedelta
 
 from people import People
 
@@ -16,6 +17,16 @@ with open(wordpath) as w:
 
 for word in wordlist:
     maybe.append(word.strip())
+
+
+def pass_good_until():
+    return datetime.now() + timedelta(hours=4)
+
+
+def friendly_time(time=None):
+    if time is None:
+        time = pass_good_until()
+    return time.strftime('%b-%d %I:%M%p')
 
 
 def generate_password():
@@ -132,3 +143,19 @@ def find_user_by_name(message, username):
             message.reply(str(user))
             return
     message.reply('No user found by that name: {}.'.format(username))
+
+
+@respond_to('grant (\S*) (.*)')
+def grant_access(message, db, reason):
+    load_users(message._client.users)
+    requester = message._get_user_id()
+    if user_list[requester].is_approved:
+        message.reply('Granting access to: {}'.format(db))
+        message.reply('Reason: {}'.format(reason))
+        message.reply('Password: {}'.format(generate_password()))
+        message.reply('Good until: {}'.format(friendly_time()))
+        return
+    if user_list[requester].is_denied:
+        message.reply('Request denied')
+        return
+    message.reply("Unfortunately, you're not approved yet. Requesting approval.")
