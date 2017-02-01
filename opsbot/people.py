@@ -42,6 +42,7 @@ class People(dict):
     def __init__(self):
         super(People, self).__init__()
         self._load_people()
+        self.loaded = False
 
     def _load_people(self):
         people_dict = {}
@@ -60,6 +61,7 @@ class People(dict):
         return users
 
     def load(self, details):
+        self.loaded = True
         if (details['id'] not in self.keys()):
             self[details['id']] = Person(UNKNOWN)
         self[details['id']].load(details)

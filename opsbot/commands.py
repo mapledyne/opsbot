@@ -5,8 +5,7 @@ from slackbot.bot import respond_to
 
 from people import People
 
-wordpath = '/opt/opsbot/opsbot/wordlist.txt'
-people_path = '/opt/opsbot/people.json'
+wordpath = 'opsbot/wordlist.txt'
 
 user_list = People()
 
@@ -30,8 +29,16 @@ def generate_password():
 
 
 def load_users(everyone):
+    if user_list.loaded:
+        return
     for user in iteritems(everyone):
         user_list.load(user[1])
+
+
+def list_to_names(names):
+    names_list = []
+    for n in names:
+        names_list.append(names[n].details['name'])
 
 
 @respond_to('password$')
@@ -58,7 +65,8 @@ def help(message):
 @respond_to('admins')
 def pass_request(message):
     load_users(message._client.users)
-    message.reply('My admins are: {}'.format(", ".join(user_list.admin_list())))
+    names = list_to_names(user_list.admin_list())
+    message.reply('My admins are: {}'.format(", ".join(names)))
 
 
 @respond_to('me')
