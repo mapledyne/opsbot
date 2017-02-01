@@ -34,7 +34,7 @@ def load_users(everyone):
         if user not in user_list.keys:
             print('Missing user found: {}'.format(user))
             continue
-        user_list[user].load(everyone[user])
+        user_list.load(everyone[user])
 
 
 @respond_to('password$')
@@ -61,7 +61,7 @@ def help(message):
 @respond_to('admins')
 def pass_request(message):
     load_users(message._client.users)
-    message.reply('My admins are: {}'.format(", ".join(users.admin_list())))
+    message.reply('My admins are: {}'.format(", ".join(user_list.admin_list())))
     for p in users:
         print('***')
         print(p.details)

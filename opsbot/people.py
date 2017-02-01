@@ -59,6 +59,11 @@ class People(dict):
                 users[person] = self[person]
         return users
 
+    def load(self, details):
+        if (detail['id'] not in self.keys()):
+            self[detail['id']] = Person(UNKNOWN)
+        self[detail['id']].load(details)
+
     def admin_list(self):
         return self._user_list(ADMIN, False)
 
