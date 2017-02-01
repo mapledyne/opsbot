@@ -3,10 +3,13 @@ import random
 from six import iteritems
 from slackbot.bot import respond_to
 
+from people import People
+
 wordpath = '/opt/words/wordlist.txt'
 people_path = '/opt/opsbot/people.json'
 
-people = {}
+users = People()
+
 maybe = []
 
 with open(wordpath) as w:
@@ -14,15 +17,6 @@ with open(wordpath) as w:
 
 for word in wordlist:
     maybe.append(word.strip())
-
-
-def load_people():
-    with open(people_path) as data_file:
-        people = json.load(data_file)
-    return people
-
-
-people = load_people()
 
 
 def generate_password():
@@ -33,6 +27,14 @@ def generate_password():
                str(random.randint(0, 99)) +
                maybe[2])
     return newpass
+
+
+def load_users(everyone):
+    for user in everyone:
+        if user not in users:
+            print('Missing user found: {}'.format(user))
+            continue
+        users[user].load(everyone[user])
 
 
 @respond_to('password$')
@@ -58,7 +60,11 @@ def help(message):
 
 @respond_to('admins')
 def pass_request(message):
-    message.reply('My admins are: {}'.format(", ".join(people['admins'])))
+    load_users(message._client.users)
+    message.reply('My admins are: {}'.format(", ".join(users.admin_list())))
+    for p in users:
+        print('***')
+        print(p.details)
 
 
 @respond_to('me')
