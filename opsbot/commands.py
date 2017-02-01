@@ -54,6 +54,22 @@ def list_to_names(names):
         names_list.append(names[n].details['name'])
     return names_list
 
+def pretty_json(data, with_ticks=False):
+    pretty = json.dumps(data, sort_keys=True, indent=4)
+    if with_ticks:
+        pretty = '```' + pretty + '```'
+    return pretty
+
+
+@respond_to('channels')
+def channels(message):
+    for x in message._client.channels:
+        chan = message._client.channels[x]
+        if 'is_member' in chan:
+            if chan['is_member']:
+                message.reply(pretty_json(chan, True))
+        elif 'is_im' in chan:
+            message.reply(pretty_json(chan, True))
 
 @respond_to('password$')
 @respond_to('password (\d*)')
@@ -66,10 +82,10 @@ def pass_multi_request(message, num_words=1):
         message.reply("That doesn't make any sense.")
         return
     for x in range(tries):
-        message.reply(generate_password())
+        message.reply("```" + generate_password() + "```")
 
 @respond_to('help', re.IGNORECASE)
-@listen_to('help', re.IGNORECASE)
+#@listen_to('help', re.IGNORECASE)
 def channel_help(message):
     url = ('https://mcgops.atlassian.net'
            '/wiki/display/HO/McgAuthBot+commands+and+help')
@@ -142,7 +158,7 @@ def search_user(message, search):
 def find_user_by_name(message, username):
     for userid, user in iteritems(message._client.users):
         if user['name'] == username:
-            message.reply(str(user))
+            message.reply(pretty_json(user, True))
             return
     message.reply('No user found by that name: {}.'.format(username))
 
