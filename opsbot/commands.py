@@ -5,10 +5,10 @@ from slackbot.bot import respond_to
 
 from people import People
 
-wordpath = '/opt/words/wordlist.txt'
+wordpath = '/opt/opsbot/opsbot/wordlist.txt'
 people_path = '/opt/opsbot/people.json'
 
-users = People()
+user_list = People()
 
 maybe = []
 
@@ -30,11 +30,11 @@ def generate_password():
 
 
 def load_users(everyone):
-    for user in everyone:
-        if user not in users:
+    for user in iteritems(everyone):
+        if user not in user_list.keys:
             print('Missing user found: {}'.format(user))
             continue
-        users[user].load(everyone[user])
+        user_list[user].load(everyone[user])
 
 
 @respond_to('password$')
