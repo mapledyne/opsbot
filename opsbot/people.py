@@ -33,7 +33,7 @@ class Person:
     def is_denied(self):
         return self.level <= DENIED
 
-    def load(details):
+    def load(self, details):
         self.details = details
 
 
@@ -60,9 +60,9 @@ class People(dict):
         return users
 
     def load(self, details):
-        if (detail['id'] not in self.keys()):
-            self[detail['id']] = Person(UNKNOWN)
-        self[detail['id']].load(details)
+        if (details['id'] not in self.keys()):
+            self[details['id']] = Person(UNKNOWN)
+        self[details['id']].load(details)
 
     def admin_list(self):
         return self._user_list(ADMIN, False)

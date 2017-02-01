@@ -31,10 +31,7 @@ def generate_password():
 
 def load_users(everyone):
     for user in iteritems(everyone):
-        if user not in user_list.keys():
-            print('Missing user found: {}'.format(user))
-            continue
-        user_list.load(everyone[user])
+        user_list.load(user[1])
 
 
 @respond_to('password$')
@@ -62,9 +59,6 @@ def help(message):
 def pass_request(message):
     load_users(message._client.users)
     message.reply('My admins are: {}'.format(", ".join(user_list.admin_list())))
-    for p in users:
-        print('***')
-        print(p.details)
 
 
 @respond_to('me')
