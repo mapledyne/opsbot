@@ -41,6 +41,7 @@ def list_to_names(names):
         names_list.append(names[n].details['name'])
     return names_list
 
+
 @respond_to('password$')
 @respond_to('password (\d*)')
 def pass_multi_request(message, num_words=1):
@@ -63,11 +64,34 @@ def help(message):
 
 
 @respond_to('admins')
-def pass_request(message):
+def admin_list(message):
     load_users(message._client.users)
     names = list_to_names(user_list.admin_list())
     message.reply('My admins are: {}'.format(", ".join(names)))
 
+
+@respond_to('approved')
+def approved_list(message):
+    load_users(message._client.users)
+    names = list_to_names(user_list.approved_list())
+    message.reply('Approved users are: {}'.format(", ".join(names)))
+
+
+@respond_to('denied')
+def denied_list(message):
+    load_users(message._client.users)
+    names = list_to_names(user_list.denied_list())
+    message.reply('Denied user are: {}'.format(", ".join(names)))
+
+
+@respond_to('unknown')
+def unknown_list(message):
+    load_users(message._client.users)
+    names = list_to_names(user_list.unknown_list())
+    if (len(names) > 100):
+        message.reply("I have too many unknown users ({}) and can't list them all.".format(len(names)))
+        return
+    message.reply('Unknown users are: {}'.format(", ".join(names)))
 
 @respond_to('me')
 def status(message):
