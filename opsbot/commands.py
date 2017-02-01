@@ -144,16 +144,16 @@ def find_user_by_name(message, username):
             return
     message.reply('No user found by that name: {}.'.format(username))
 
-
 @respond_to('grant (\S*) (.*)')
 def grant_access(message, db, reason):
     load_users(message._client.users)
     requester = message._get_user_id()
     if user_list[requester].is_approved:
+        expiration = pass_good_until() + timedelta(seconds=int(user_list[requestor].details['tz_offset']))
         message.reply('Granting access to: {}'.format(db))
         message.reply('Reason: {}'.format(reason))
         message.reply('Password: {}'.format(generate_password()))
-        message.reply('Good until: {}'.format(friendly_time()))
+        message.reply('Good until: {}'.format(friendly_time(expiration)))
         return
     if user_list[requester].is_denied:
         message.reply('Request denied')
