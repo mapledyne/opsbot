@@ -1,7 +1,9 @@
 import json
 import random
 from six import iteritems
+import re
 from slackbot.bot import respond_to
+from slackbot.bot import listen_to
 from datetime import datetime, timedelta
 
 from people import People
@@ -66,9 +68,9 @@ def pass_multi_request(message, num_words=1):
     for x in range(tries):
         message.reply(generate_password())
 
-
-@respond_to('help')
-def help(message):
+@respond_to('help', re.IGNORECASE)
+@listen_to('help', re.IGNORECASE)
+def channel_help(message):
     url = ('https://mcgops.atlassian.net'
            '/wiki/display/HO/McgAuthBot+commands+and+help')
     message.reply('Help document for me lives at: {}'.format(url))
@@ -144,12 +146,12 @@ def find_user_by_name(message, username):
             return
     message.reply('No user found by that name: {}.'.format(username))
 
-@respond_to('grant (\S*) (.*)')
+@listen_to('grant (\S*) (.*)')
 def grant_access(message, db, reason):
     load_users(message._client.users)
     requester = message._get_user_id()
     if user_list[requester].is_approved:
-        expiration = pass_good_until() + timedelta(seconds=int(user_list[requestor].details['tz_offset']))
+        expiration = pass_good_until() + timedelta(seconds=int(user_list[requester].details['tz_offset']))
         message.reply('Granting access to: {}'.format(db))
         message.reply('Reason: {}'.format(reason))
         message.reply('Password: {}'.format(generate_password()))
