@@ -1,11 +1,14 @@
+from enum import Enum
 import json
 
 people_path = '/opt/opsbot/people.json'
 
-ADMIN = 50
-UNKNOWN = 0
-DENIED = -10
-APPROVED = 10
+
+class Level(Enum):
+    Admin = 50
+    Unknown = 0
+    Denied = -10
+    Approved = 10
 
 
 class Person:
@@ -19,19 +22,19 @@ class Person:
 
     @property
     def is_admin(self):
-        return self.level >= ADMIN
+        return self.level == Level.Admin
 
     @property
     def is_approved(self):
-        return self.level >= APPROVED
+        return self.level >= Level.Approved
 
     @property
     def is_unknown(self):
-        return self.level == UNKNOWN
+        return self.level == Level.Unknown
 
     @property
     def is_denied(self):
-        return self.level <= DENIED
+        return self.level <= Level.Denied
 
     def load(self, details):
         self.details = details
@@ -63,17 +66,17 @@ class People(dict):
     def load(self, details):
         self.loaded = True
         if (details['id'] not in self.keys()):
-            self[details['id']] = Person(UNKNOWN)
+            self[details['id']] = Person(Level.Unknown)
         self[details['id']].load(details)
 
     def admin_list(self):
-        return self._user_list(ADMIN, False)
+        return self._user_list(Level.Admin, False)
 
     def approved_list(self):
-        return self._user_list(APPROVED, False)
+        return self._user_list(Level.Approved, False)
 
     def unknown_list(self):
-        return self._user_list(UNKNOWN)
+        return self._user_list(Level.Unknown)
 
     def denied_list(self):
-        return self._user_list(DENIED)
+        return self._user_list(Level.Denied)

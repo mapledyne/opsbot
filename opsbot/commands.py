@@ -91,6 +91,15 @@ def channel_help(message):
            '/wiki/display/HO/McgAuthBot+commands+and+help')
     message.reply('Help document for me lives at: {}'.format(url))
 
+@respond_to('approve', re.IGNORECASE)
+def approve_me(message):
+    sender_id = message._get_user_id()
+    level = user_list[sender_id].level
+    if (level == UNKNOWN):
+        message.reply("Sending request to the approvers to have you be approved.")
+    else:
+        message.reply("Your status is alredy: " + user_list[sender_id].level.name)
+
 
 @respond_to('admins')
 def admin_list(message):
