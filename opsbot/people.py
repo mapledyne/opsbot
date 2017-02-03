@@ -1,10 +1,10 @@
-from enum import Enum
+from enum import IntEnum
 import json
 
 people_path = '/opt/opsbot/people.json'
 
 
-class Level(Enum):
+class Level(IntEnum):
     Admin = 50
     Unknown = 0
     Denied = -10
@@ -13,7 +13,7 @@ class Level(Enum):
 
 class Person:
     def __init__(self, level):
-        self.level = level
+        self.level = Level(level)
         self.details = {}
 
     @property
