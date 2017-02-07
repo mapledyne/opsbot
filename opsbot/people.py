@@ -55,6 +55,15 @@ class People(dict):
             newbie = Person(people['people'][person])
             self[person] = newbie
 
+    def save(self):
+        people_dict = {}
+        people_dict['people'] = {}
+        for person in self.keys():
+            if not self[person].is_unknown:
+                people_dict['people'][person] = int(self[person].level)
+        with open(people_path, 'w') as outfile:
+            json.dump(people_dict, outfile)
+
     def _user_list(self, level, exact=True):
         users = {}
         for person in self.keys():
@@ -62,6 +71,12 @@ class People(dict):
                     (self[person].level >= level and not exact)):
                 users[person] = self[person]
         return users
+
+    def find_user(self, name):
+        for person in self.keys():
+            if self[person].details['name'] == name:
+                return self[person]
+        return None
 
     def load(self, details):
         self.loaded = True
