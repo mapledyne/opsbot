@@ -6,6 +6,7 @@ creating and removing users.
 import pyodbc
 import json
 import logging
+import os
 
 from datetime import datetime
 from datetime import timedelta
@@ -150,23 +151,46 @@ def build_database_list():
     """Get a list of databases and save them to file."""
     dbs = execute_sql('SELECT * FROM sys.databases', '', True)
     db_list = {}
-    svr = 'mcgintsql01.database.windows.net'
+    svr = config.AZURE_SQL_SERVERS[0]
     for db in dbs:
-        db_list[db[0]].append(svr)
-    logging.debug('Databases found: {}'.format(len(db_list[svr])))
+        if db[0] == 'master':
+            continue
+        db_list[db[0]] = svr
+    logging.debug('Databases found: {}'.format(len(db_list)))
     with open(db_path, 'w') as outfile:
         json.dump(db_list, outfile)
+
+
+def database_list():
+    """Return the list of databases."""
+    with open(db_path) as data_file:
+        dbs = json.load(data_file)
+    return dbs
 
 
 def delete_expired_users():
     """Find any expired users and remove them."""
     with open(sql_logins) as data_file:
         people = json.load(data_file)
+    people_changed = False
     for user in people:
         delta = timedelta(hours=config.HOURS_TO_GRANT_ACCESS)
         expired = datetime.now() - delta
         user_expires = datetime.strptime(people[user], "%Y-%m-%dT%H:%M:%S.%f")
         if user_expires < expired:
             logging.info('User {} expired. Removing.'.format(user))
+            if sql_user_exists(user):
+                sql = "DROP LOGIN [{}]".format(user)
+                execute_sql(sql)
+                people[user] = 0
+                people_changed = True
         else:
             logging.debug('User: {}, expires: {}'.format(user, people[user]))
+    people = [p for p in people if people[p] is not 0]
+    if people_changed:
+        new_people = {}
+        for p in people:
+            if people[p] is not 0:
+                new_people[p] = people[p]
+        with open(sql_logins, 'w') as outfile:
+            json.dump(new_people, outfile)

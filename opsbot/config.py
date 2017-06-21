@@ -26,6 +26,12 @@ AZURE_USER = os.getenv('AZURE_SQL_USER')
 AZURE_PASSWORD = os.getenv('AZURE_SQL_PASS')
 AZURE_DSN = os.getenv('AZURE_SQL_DSN')
 
+# This env variable should be a comma separated list of SQL servers to pull
+# from. Something like:
+# AZURE_SQL_SERVERS=server1,server2,server3
+
+AZURE_SQL_SERVERS = os.getenv('AZURE_SQL_SERVERS', '').split(',')
+
 # Slack channel to listen to and do group replies in:
 AUTH_CHANNEL = os.getenv('AUTH_SLACK_CHANNEL')
 
@@ -33,7 +39,7 @@ AUTH_CHANNEL = os.getenv('AUTH_SLACK_CHANNEL')
 HELP_URL = os.getenv('SLACK_HELP_URL', 'HELP_URL env variable not set.')
 
 # Logging level. (10 = DEBUG, 20 = INFO, 30 = WARNING)
-LOGGING_LEVEL = os.getenv('AUTH_LOGGING_LEVEL', 30)
+LOGGING_LEVEL = int(os.getenv('AUTH_LOGGING_LEVEL', 30))
 
 # Everything below here is intended to be a sensible default and typically
 # shouldn't need to be changed. If you expect to change one of these values

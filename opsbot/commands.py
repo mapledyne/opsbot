@@ -314,13 +314,9 @@ def find_user_by_name(message, username):
 @listen_to('^server (\S*)$')
 def find_server(message, db):
     """Display the server a given database is on."""
-    db_list = ['azureinternaltesticm80',
-               'custsatcwqi60',
-               'custsatcwqi70d',
-               'salescwqi6a',
-               'tsscaa707']
+    db_list = sql.database_list()
     if db in db_list:
-        server = 'mcgintsql01.database.windows.net'
+        server = db_list[db]
         message.reply(Strings['DATABASE_SERVER'].format(db, server))
     else:
         message.reply(Strings['DATABASE_UNKNOWN'].format(db))
@@ -334,11 +330,7 @@ def no_reason(message, db):
 
 def grant_sql_access(message, db, reason, readonly):
     """Grant access for the user to a the specified database."""
-    db_list = ['azureinternaltesticm80',
-               'custsatcwqi60',
-               'custsatcwqi70d',
-               'salescwqi6a',
-               'tsscaa707']
+    db_list = sql.database_list()
     requested_dbs = fnmatch.filter(db_list, db)
     load_users(message._client.users)
     requester = message._get_user_id()
@@ -365,6 +357,8 @@ def grant_sql_access(message, db, reason, readonly):
                 created_flag = True
         friendly_exp = friendly_time(expiration)
         message.reply(Strings['GRANTED_ACCESS'].format(db, friendly_exp))
+        if (len(requested_dbs) > 1):
+            message.reply('{} databases affected.'.format(len(requested_dbs)))
         if created_flag:
             pass_created = Strings['PASSWORD_CREATED'].format(db, password)
             message._client.send_message(chan, pass_created)
