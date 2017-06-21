@@ -1,0 +1,19 @@
+NONSENSE: "That doesn't make any sense."
+TOO_MANY_PASSWORDS: "I can't generate that many passwords at one time."
+HELP: "Help document for me lives at: {}"
+APPROVER_REQUEST: "Sending request to the approvers to have you be approved."
+APPROVER_REQUEST_DETAIL: '<@{}>: Please review this user and approve if appropriate: ```approve {}```'
+APPROVE_ME_REQUEST: 'Request approval by sending me the request via direct message: `approve me`.'
+MARKED_DENIED: "This user was marked 'denied'. This must be removed manually before they can be approved."
+USER_NOT_FOUND: "I can't find that user ({}). Are you using their slack id? If so, please check the spelling."
+CANT_APPROVE: 'You cannot approve users.'
+TOO_MANY_USERS: "I have too many unknown users ({}) and can't list them all."
+USERS_FOUND: '{} users found. Try `search <name>` to find someone.'
+DATABASE_SERVER: 'The database `{}` is on the server `<{}>`'
+DATABASE_UNKNOWN: "This database ({}) doesn't seem to exist. Is it spelled correctly?"
+GRANT_EXAMPLE: 'You must supply a reason for access, like: ```grant {} salesforce ticket 123456```'
+GRANTED_ACCESS: "Granting access to database '{}' until {}. Password sent via direct message."
+PASSWORD_CREATED: "Password to access '{}': ```{}```"
+PASSWORD_REUSED: "To access '{}', your password is the same as your previous grant request."
+SLACK_ID: "Reminder: use your Slack id ({}) as your username."
+NOT_APPROVED_YET: "Unfortunately, you're not approved yet. Start the approval process by sending me a direct message saying 'approve me'."
