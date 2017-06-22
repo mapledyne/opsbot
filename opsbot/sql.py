@@ -3,10 +3,10 @@
 This module handles all of the ODBC interaction for the slackbot, primarily
 creating and removing users.
 """
-import pyodbc
 import json
 import logging
 import os
+import pyodbc
 
 from datetime import datetime
 from datetime import timedelta
@@ -159,13 +159,6 @@ def build_database_list():
     logging.debug('Databases found: {}'.format(len(db_list)))
     with open(db_path, 'w') as outfile:
         json.dump(db_list, outfile)
-
-
-def database_list():
-    """Return the list of databases."""
-    with open(db_path) as data_file:
-        dbs = json.load(data_file)
-    return dbs
 
 
 def delete_expired_users():

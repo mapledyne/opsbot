@@ -1,13 +1,9 @@
 """Background tasks needed to support the slack bot."""
-import json
 import logging
 import threading
 import time
 
 import config
-from people import People
-from people import Level
-from strings import Strings
 import sql
 
 
@@ -72,7 +68,7 @@ class TaskThread(threading.Thread):
                 self.thread_worker()
 
     def thread_worker(self):
-        """The actual work of one of these threads.
+        """Do the actual work of one of these threads.
 
         Override this to do any work in these threads.
         """

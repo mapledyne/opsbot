@@ -1,18 +1,19 @@
 """Commands available by the slackbot and some related helper functions."""
+from datetime import datetime
+from datetime import timedelta
+import fnmatch
 import json
 import random
-from six import iteritems
 import re
-from slackbot.bot import respond_to
+from six import iteritems
 from slackbot.bot import listen_to
-from datetime import datetime, timedelta
-import fnmatch
+from slackbot.bot import respond_to
 
 import config
-from people import People
 from people import Level
-from strings import Strings
+from people import People
 import sql
+from strings import Strings
 
 user_list = People()
 maybe = []
@@ -172,10 +173,10 @@ def approve_me(message):
     target = user_list[sender_id].details['name']
     if (user_list[sender_id].is_unknown):
         message.reply(Strings['APPROVER_REQUEST'])
-        names = list_to_names(user_list.admin_list())
+        names = list_to_names(user_list.admin_list)
         approval_message = Strings[
             'APPROVER_REQUEST_DETAIL'].format(">, <@".join(names), target)
-        message._client.send_message(Config.AUTH_CHANNEL, approval_message)
+        message._client.send_message(config.AUTH_CHANNEL, approval_message)
     else:
         message.reply(
             "Your status is already: " + user_list[sender_id].level.name)
@@ -225,7 +226,7 @@ def approve_person(message, target):
 def admin_list(message):
     """Display a list of all admins."""
     load_users(message._client.users)
-    names = list_to_names(user_list.admin_list())
+    names = list_to_names(user_list.admin_list)
     message.reply('My admins are: {}'.format(", ".join(names)))
 
 
@@ -233,7 +234,7 @@ def admin_list(message):
 def approved_list(message):
     """Display a list of all approved users."""
     load_users(message._client.users)
-    names = list_to_names(user_list.approved_list())
+    names = list_to_names(user_list.approved_list)
     message.reply('Approved users are: {}'.format(", ".join(names)))
 
 
@@ -241,7 +242,7 @@ def approved_list(message):
 def denied_list(message):
     """Display a list of denied users."""
     load_users(message._client.users)
-    names = list_to_names(user_list.denied_list())
+    names = list_to_names(user_list.denied_list)
     message.reply('Denied user are: {}'.format(", ".join(names)))
 
 
@@ -249,7 +250,7 @@ def denied_list(message):
 def unknown_list(message):
     """Display a list of users without a known status."""
     load_users(message._client.users)
-    names = list_to_names(user_list.unknown_list())
+    names = list_to_names(user_list.unknown_list)
     if (len(names) > 100):
         message.reply(Strings['TOO_MANY_USERS'].format(len(names)))
         return
@@ -381,6 +382,6 @@ def grant_access(message, db, reason):
 
 
 @listen_to('^grantrw (\S*) (.*)')
-def grant_access(message, db, reason):
+def grant_access_rw(message, db, reason):
     """Request read/write access to a database."""
     grant_sql_access(message, db, reason, False)

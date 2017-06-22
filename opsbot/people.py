@@ -18,7 +18,7 @@ class Level(IntEnum):
     Approved = 10
 
 
-class Person:
+class Person(object):
     """One person and their associated info."""
 
     def __init__(self, id, level):
@@ -29,17 +29,17 @@ class Person:
 
     @property
     def loaded(self):
-        """True if the user has been loaded with slack details."""
+        """Return true if the user has been loaded with slack details."""
         return len(self.details) > 0
 
     @property
     def is_admin(self):
-        """True if the user is an admin."""
+        """Return true if the user is an admin."""
         return self.level == Level.Admin
 
     @property
     def is_approved(self):
-        """True if the user is approved to request access.
+        """Return true if the user is approved to request access.
 
         Note: This returns true if the user is Level.Approved, *or*
         Level.Admin. Don't use this to test explicit users. Use it to
@@ -49,12 +49,12 @@ class Person:
 
     @property
     def is_unknown(self):
-        """True if there is no record of this user."""
+        """Return true if there is no record of this user."""
         return self.level == Level.Unknown
 
     @property
     def is_denied(self):
-        """True if the user has been denied."""
+        """Return true if the user has been denied."""
         return self.level <= Level.Denied
 
     def load(self, details):
@@ -135,14 +135,17 @@ class People(dict):
             self[details['id']] = Person(details['id'], Level.Unknown)
         self[details['id']].load(details)
 
+    @property
     def admin_list(self):
         """Return a list of users with Level.Admin."""
         return self._user_list(Level.Admin, False)
 
+    @property
     def approved_list(self):
         """Return all users who are approved to request access."""
         return self._user_list(Level.Approved, False)
 
+    @property
     def unknown_list(self):
         """Return a list of users that are unknown to the system.
 
@@ -151,6 +154,7 @@ class People(dict):
         """
         return self._user_list(Level.Unknown)
 
+    @property
     def denied_list(self):
         """Return a list of users that have been denied access."""
         return self._user_list(Level.Denied)
